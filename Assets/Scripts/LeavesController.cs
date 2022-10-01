@@ -6,7 +6,7 @@ public class LeavesController : MonoBehaviour
 {
     SpriteRenderer leavesRenderer;
     public string leavesSeason;
-    public Sprite leavesSprite;
+    Sprite leavesSprite;
     string seasonOnLastUpdate;
 
     void Start()
@@ -14,24 +14,30 @@ public class LeavesController : MonoBehaviour
         leavesRenderer = gameObject.GetComponent<SpriteRenderer>();
         seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
 
+        if (leavesSeason == "Spring") {
+            leavesSprite = Resources.Load<Sprite>("spring-leaf");
+        } else {
+            leavesSprite = Resources.Load<Sprite>("autumn-leaf");
+        }
+
+       ChangeSeasonSprite();
+    }
+
+    void Update()
+    {
+        if (seasonOnLastUpdate != SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]) {
+            ChangeSeasonSprite();
+        }
+        seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
+
+    }
+
+    void ChangeSeasonSprite()
+    {
         if (SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == leavesSeason) {
             leavesRenderer.sprite = leavesSprite;
         } else {
             leavesRenderer.sprite = null;
         }
-    }
-
-    
-    void Update()
-    {
-        if (seasonOnLastUpdate != SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]) {
-            if (SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == leavesSeason) {
-                leavesRenderer.sprite = leavesSprite;
-            } else {
-                leavesRenderer.sprite = null;
-            }
-        }
-        seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
-
     }
 }

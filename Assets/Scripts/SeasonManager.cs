@@ -23,6 +23,7 @@ public class SeasonManager : MonoBehaviour
         springTileArray = Resources.LoadAll("Spring Tiles", typeof(TileBase));
         summerTileArray = Resources.LoadAll("Summer Tiles", typeof(TileBase));
         autumnTileArray = Resources.LoadAll("Autumn Tiles", typeof(TileBase));
+        ChangeSeasonTiles();
     }
 
     void Update()

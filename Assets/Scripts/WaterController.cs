@@ -4,15 +4,39 @@ using UnityEngine;
 
 public class WaterController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    SpriteRenderer waterRenderer;
+    Sprite waterSprite;
+    Sprite iceSprite;
+    string seasonOnLastUpdate;
+    public Vector2 respawnPoint;
+
     void Start()
     {
-        
+        waterRenderer = gameObject.GetComponent<SpriteRenderer>();
+        seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
+
+        waterSprite = Resources.Load<Sprite>("unfrozen-water");
+        iceSprite = Resources.Load<Sprite>("frozen-water");
+
+        ChangeSeasonSprite();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
-        
+        ChangeSeasonSprite();
+        seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
+
+    }
+
+    void ChangeSeasonSprite()
+    {
+        if (SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter") {
+            waterRenderer.sprite = iceSprite;
+        } else if (SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Summer") {
+            waterRenderer.sprite = null;
+        } else {
+            waterRenderer.sprite = waterSprite;
+        }
     }
 }
