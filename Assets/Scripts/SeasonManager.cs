@@ -5,8 +5,8 @@ using UnityEngine.Tilemaps;
 
 public class SeasonManager : MonoBehaviour
 {
-    int currentSeasonIndex = 0;
-    string[] seasonArray = {"Winter", "Spring", "Summer", "Autumn"};
+    public static int currentSeasonIndex = 0;
+    public static string[] seasonArray = {"Winter", "Spring", "Summer", "Autumn"};
     float seasonTimer = 10.0f;
     public GameObject tilemapObject;
     Tilemap tilemap;

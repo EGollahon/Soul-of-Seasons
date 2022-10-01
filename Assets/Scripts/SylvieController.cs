@@ -18,10 +18,16 @@ public class SylvieController : MonoBehaviour
     public bool isFalling = false;
     public float jumpTimer = -1.0f;
 
+    string seasonOnLastUpdate;
+
     void Start() {
         charRigidbody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         // charAnimator = GetComponent<Animator>();
+
+        seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
+        int seasonLayer = LayerMask.NameToLayer(SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]);
+        gameObject.layer = seasonLayer;
     }
 
     void Update() {
@@ -60,6 +66,12 @@ public class SylvieController : MonoBehaviour
                 jumpTimer = 0.75f;
             }
         }
+
+        if (seasonOnLastUpdate != SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]) {
+            int seasonLayer = LayerMask.NameToLayer(SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]);
+            gameObject.layer = seasonLayer;
+        }
+        seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
     }
 
     void FixedUpdate() {
