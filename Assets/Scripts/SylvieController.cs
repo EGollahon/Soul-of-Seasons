@@ -20,6 +20,11 @@ public class SylvieController : MonoBehaviour
 
     string seasonOnLastUpdate;
 
+    public GameObject UIWinterShard;
+    public GameObject UISpringShard;
+    public GameObject UISummerShard;
+    public GameObject UIAutumnShard;
+
     void Start() {
         charRigidbody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
@@ -90,8 +95,22 @@ public class SylvieController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Tile")
+        if (
+            collision.gameObject.tag == "Tile"
+            || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter"
+        ))
         {
+            isFalling = false;
+        } else if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
+            charRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
+            isFalling = false;
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
+            charRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
         }
     }
@@ -101,6 +120,28 @@ public class SylvieController : MonoBehaviour
         if (collision.gameObject.tag == "Tile" && !isJumping)
         {
             isFalling = true;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collider) {
+        if (
+            collider.gameObject.tag == "WinterShard" || collider.gameObject.tag == "SpringShard"
+            || collider.gameObject.tag == "SummerShard" || collider.gameObject.tag == "AutumnShard"
+        ) {
+            collider.gameObject.SetActive(false);
+            if (collider.gameObject.tag == "WinterShard") {
+                SeasonManager.winterShardObtained = true;
+                UIWinterShard.SetActive(true);
+            } else if (collider.gameObject.tag == "SpringShard") {
+                SeasonManager.springShardObtained = true;
+                UISpringShard.SetActive(true);
+            } else if (collider.gameObject.tag == "SummerShard") {
+                SeasonManager.summerShardObtained = true;
+                UISummerShard.SetActive(true);
+            } else if (collider.gameObject.tag == "AutumnShard") {
+                SeasonManager.autumnShardObtained = true;
+                UIAutumnShard.SetActive(true);
+            }
         }
     }
 }

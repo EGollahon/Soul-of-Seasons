@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Tile
   - Pond
+  - WinterShard
+  - SpringShard
+  - SummerShard
+  - AutumnShard
   layers:
   - Default
   - TransparentFX

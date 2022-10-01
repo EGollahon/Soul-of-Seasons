@@ -16,6 +16,11 @@ public class SeasonManager : MonoBehaviour
     Object[] summerTileArray;
     Object[] autumnTileArray;
 
+    public static bool winterShardObtained = false;
+    public static bool springShardObtained = false;
+    public static bool summerShardObtained = false;
+    public static bool autumnShardObtained = false;
+
     void Start()
     {
         tilemap = tilemapObject.GetComponent<Tilemap>();
