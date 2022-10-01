@@ -10,6 +10,8 @@ TagManager:
   - SpringShard
   - SummerShard
   - AutumnShard
+  - SpringLeaves
+  - AutumnLeaves
   layers:
   - Default
   - TransparentFX

@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 246643103}
   m_Layer: 8
   m_Name: spring-leaf
-  m_TagString: Untagged
+  m_TagString: SpringLeaves
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1118,7 +1118,7 @@ GameObject:
   - component: {fileID: 946040109}
   m_Layer: 10
   m_Name: autumn-leaf
-  m_TagString: Untagged
+  m_TagString: AutumnLeaves
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2852,9 +2852,12 @@ MonoBehaviour:
   walkSpeed: 5
   jumpSpeed: 5
   gravity: -5
+  calculatedJumpSpeed: 0
+  calculatedGravity: 0
   isJumping: 0
   isFalling: 0
   jumpTimer: -1
+  fallTimer: -1
   UIWinterShard: {fileID: 1924658391}
   UISpringShard: {fileID: 1581788136}
   UISummerShard: {fileID: 19876404}

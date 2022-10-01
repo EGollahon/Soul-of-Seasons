@@ -11,12 +11,15 @@ public class SylvieController : MonoBehaviour
     public float walkSpeed = 5.0f;
     public float jumpSpeed = 5.0f;
     public float gravity = -5.0f;
+    public float calculatedJumpSpeed = 0.0f;
+    public float calculatedGravity = 0.0f;
 
     Vector2 movement = new Vector2(0, 0);
 
     public bool isJumping = false;
     public bool isFalling = false;
     public float jumpTimer = -1.0f;
+    public float fallTimer = -1.0f;
 
     string seasonOnLastUpdate;
 
@@ -60,16 +63,25 @@ public class SylvieController : MonoBehaviour
                 jumpTimer = -1.0f;
             } else {
                 jumpTimer -= Time.deltaTime;
+                float t = jumpTimer * 2.0f;
+                calculatedJumpSpeed = (30 * t * (1 - t)) + (Mathf.Pow(t, 2) * 15);
             }
             if (jumpTimer < 0) {
                 isJumping = false;
                 isFalling = true;
+                fallTimer = 0.5f;
             }
         } else if (!isFalling) {
             if (Input.GetAxis("Jump") > 0) {
                 isJumping = true;
-                jumpTimer = 0.75f;
+                jumpTimer = 0.5f;
             }
+        }
+
+        if (fallTimer >= 0) {
+            fallTimer -= Time.deltaTime;
+            float t = 1.0f - (fallTimer * 2.0f);
+            calculatedGravity = -((30 * t * (1 - t)) + (Mathf.Pow(t, 2) * 15));
         }
 
         if (seasonOnLastUpdate != SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]) {
@@ -85,9 +97,9 @@ public class SylvieController : MonoBehaviour
 
         newPos.x += walkSpeed * movement.x * Time.deltaTime;
         if (!isJumping) {
-            newPos.y += gravity * Time.deltaTime;
+            newPos.y += calculatedGravity * Time.deltaTime;
         } else {
-            newPos.y += jumpSpeed * Time.deltaTime;
+            newPos.y += calculatedJumpSpeed * Time.deltaTime;
         }
 
         charRigidbody.MovePosition(newPos);
@@ -97,8 +109,10 @@ public class SylvieController : MonoBehaviour
     {
         if (
             collision.gameObject.tag == "Tile"
-            || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter"
-        ))
+            || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
+            || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
+            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
+        )
         {
             isFalling = false;
         } else if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
