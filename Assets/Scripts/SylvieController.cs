@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class SylvieController : MonoBehaviour
 {
-    Rigidbody2D charRigidbody;
+    Rigidbody2D ivyRigidbody;
     BoxCollider2D boxCollider;
-    Animator charAnimator;
+    Animator ivyAnimator;
 
     public float walkSpeed = 5.0f;
-    public float jumpSpeed = 5.0f;
-    public float gravity = -5.0f;
     public float calculatedJumpSpeed = 0.0f;
     public float calculatedGravity = 0.0f;
 
@@ -29,9 +27,9 @@ public class SylvieController : MonoBehaviour
     public GameObject UIAutumnShard;
 
     void Start() {
-        charRigidbody = GetComponent<Rigidbody2D>();
+        ivyRigidbody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        // charAnimator = GetComponent<Animator>();
+        ivyAnimator = GetComponent<Animator>();
 
         seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
         int seasonLayer = LayerMask.NameToLayer(SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]);
@@ -47,13 +45,13 @@ public class SylvieController : MonoBehaviour
         } else if (isFalling) {
 
         } else if (movement.x > 0) {
-            // charAnimator.SetBool("isWalking", true);
-            // charAnimator.SetBool("isFacingLeft", false);
+            ivyAnimator.SetFloat("LookDirection", 1.0f);
+            ivyAnimator.SetBool("IsMoving", true);
         } else if (movement.x < 0) {
-            // charAnimator.SetBool("isWalking", true);
-            // charAnimator.SetBool("isFacingLeft", true);
+            ivyAnimator.SetFloat("LookDirection", -1.0f);
+            ivyAnimator.SetBool("IsMoving", true);
         } else {
-            // charAnimator.SetBool("isWalking", false);
+            ivyAnimator.SetBool("IsMoving", false);
         }
 
         if (jumpTimer >= 0) {
@@ -61,6 +59,8 @@ public class SylvieController : MonoBehaviour
                 isJumping = false;
                 isFalling = true;
                 jumpTimer = -1.0f;
+                ivyAnimator.SetBool("IsJumping", false);
+                ivyAnimator.SetBool("IsFalling", true);
             } else {
                 jumpTimer -= Time.deltaTime;
                 float t = jumpTimer * 2.0f;
@@ -70,11 +70,16 @@ public class SylvieController : MonoBehaviour
                 isJumping = false;
                 isFalling = true;
                 fallTimer = 0.5f;
+                ivyAnimator.SetBool("IsJumping", false);
+                ivyAnimator.SetBool("IsFalling", true);
             }
         } else if (!isFalling) {
             if (Input.GetAxis("Jump") > 0) {
                 isJumping = true;
                 jumpTimer = 0.5f;
+                ivyAnimator.SetTrigger("Jump");
+                Debug.Log("jump");
+                ivyAnimator.SetBool("IsJumping", true);
             }
         }
 
@@ -92,48 +97,59 @@ public class SylvieController : MonoBehaviour
     }
 
     void FixedUpdate() {
-        Vector2 position = charRigidbody.position;
+        Vector2 position = ivyRigidbody.position;
         Vector2 newPos = position;
 
         newPos.x += walkSpeed * movement.x * Time.deltaTime;
-        if (!isJumping) {
+        if (isFalling) {
             newPos.y += calculatedGravity * Time.deltaTime;
-        } else {
+        } else if (isJumping) {
             newPos.y += calculatedJumpSpeed * Time.deltaTime;
         }
 
-        charRigidbody.MovePosition(newPos);
+        ivyRigidbody.MovePosition(newPos);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (
-            collision.gameObject.tag == "Tile"
+            isFalling &&
+            (collision.gameObject.tag == "Tile"
             || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
             || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
-            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
+            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn"))
         )
         {
             isFalling = false;
-        } else if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
-            charRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
+            ivyAnimator.SetTrigger("Land");
+            Debug.Log("land1");
+            ivyAnimator.SetBool("IsFalling", false);
+        } else if (isFalling && collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
+            ivyRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
+            ivyAnimator.SetTrigger("Land");
+            Debug.Log("land2");
+            ivyAnimator.SetBool("IsFalling", false);
         }
     }
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
-            charRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
+        if (isFalling && collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
+            ivyRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
+            ivyAnimator.SetTrigger("Land");
+            Debug.Log("land3");
+            ivyAnimator.SetBool("IsFalling", false);
         }
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Tile" && !isJumping)
+        if (!isJumping && (collision.gameObject.tag == "Tile" || collision.gameObject.tag == "SpringLeaves" || collision.gameObject.tag == "AutumnLeaves"))
         {
             isFalling = true;
+            ivyAnimator.SetBool("IsFalling", true);
         }
     }
 
