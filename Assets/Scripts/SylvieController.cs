@@ -9,15 +9,15 @@ public class SylvieController : MonoBehaviour
     Animator ivyAnimator;
 
     float walkSpeed = 5.0f;
-    float calculatedJumpSpeed = 0.0f;
-    float calculatedGravity = -14.9999f;
+    public float calculatedJumpSpeed = 0.0f;
+    public float calculatedGravity = -14.9999f;
 
     Vector2 movement = new Vector2(0, 0);
 
-    bool isJumping = false;
-    bool isFalling = false;
-    float jumpTimer = -1.0f;
-    float fallTimer = -1.0f;
+    public bool isJumping = false;
+    public bool isFalling = false;
+    public float jumpTimer = -1.0f;
+    public float fallTimer = -1.0f;
     string seasonOnLastUpdate;
 
     public GameObject UIWinterShard;
@@ -125,7 +125,7 @@ public class SylvieController : MonoBehaviour
         float hitY = contacts[0].point.y;
 
         if (
-            (collision.gameObject.tag == "Tile" && hitY <= gameObject.transform.position.y)
+            (collision.gameObject.tag == "Tile" && hitY <= gameObject.transform.position.y - 0.5f)
             || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
             || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
             || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
@@ -144,10 +144,28 @@ public class SylvieController : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
+        int contactCount = collision.contactCount;
+        ContactPoint2D[] contacts = new ContactPoint2D[10];
+        if (contactCount > contacts.Length)
+        {
+            contacts = new ContactPoint2D[contactCount];
+        }
+        collision.GetContacts(contacts);
+        float hitY = contacts[0].point.y;
+
         if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
             ivyRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
             ivyAnimator.SetTrigger("Land");
+            ivyAnimator.SetBool("IsFalling", false);
+        } else if (
+            (collision.gameObject.tag == "Tile" && hitY <= gameObject.transform.position.y - 0.5f)
+            || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
+            || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
+            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
+        )
+        {
+            isFalling = false;
             ivyAnimator.SetBool("IsFalling", false);
         }
     }

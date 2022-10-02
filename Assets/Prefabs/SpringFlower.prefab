@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6135454859120718840}
   - component: {fileID: 6135454859120718841}
   - component: {fileID: 6135454859120718790}
+  - component: {fileID: 454317806308784802}
   m_Layer: 8
   m_Name: SpringFlower
   m_TagString: SpringLeaves
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 881114025
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: e22f41cffafcc40a89f167506d90dbfb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -125,3 +126,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leavesSeason: Spring
+--- !u!50 &454317806308784802
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6135454859120718791}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
