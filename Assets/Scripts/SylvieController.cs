@@ -113,18 +113,17 @@ public class SylvieController : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (
-            isFalling &&
-            (collision.gameObject.tag == "Tile"
+            collision.gameObject.tag == "Tile"
             || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
             || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
-            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn"))
+            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
         )
         {
             isFalling = false;
             ivyAnimator.SetTrigger("Land");
             Debug.Log("land1");
             ivyAnimator.SetBool("IsFalling", false);
-        } else if (isFalling && collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
+        } else if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
             ivyRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
             ivyAnimator.SetTrigger("Land");
@@ -135,7 +134,7 @@ public class SylvieController : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        if (isFalling && collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
+        if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
             ivyRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
             ivyAnimator.SetTrigger("Land");
