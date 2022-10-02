@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class SeasonManager : MonoBehaviour
 {
-    public static int currentSeasonIndex = 0;
+    public static int currentSeasonIndex = 2;
     public static string[] seasonArray = {"Winter", "Spring", "Summer", "Autumn"};
     float seasonTimer = 10.0f;
     public GameObject colliderTilemapReference;
@@ -24,6 +24,11 @@ public class SeasonManager : MonoBehaviour
     public static bool springShardObtained = false;
     public static bool summerShardObtained = false;
     public static bool autumnShardObtained = false;
+    public static int piecesLeft = 4;
+
+    public bool isDoneWithCutscene = true;
+    public float cutsceneTimer = -1.0f;
+    public int seasonChangeCount = 0;
 
     void Start()
     {
@@ -39,16 +44,36 @@ public class SeasonManager : MonoBehaviour
 
     void Update()
     {
-         if (seasonTimer >= 0) {
-            seasonTimer -= Time.deltaTime;
-            if (seasonTimer < 0) {
-                if (currentSeasonIndex == 3) {
-                    currentSeasonIndex = 0;
-                } else {
-                    currentSeasonIndex = currentSeasonIndex + 1;
+        if (!winterShardObtained || !springShardObtained || !summerShardObtained || !autumnShardObtained) {
+            if (seasonTimer >= 0 && isDoneWithCutscene) {
+                seasonTimer -= Time.deltaTime;
+                if (seasonTimer < 0) {
+                    if (currentSeasonIndex == 3) {
+                        currentSeasonIndex = 0;
+                    } else {
+                        currentSeasonIndex = currentSeasonIndex + 1;
+                    }
+                    seasonTimer = 10.0f;
+                    ChangeSeasonTiles();
                 }
-                seasonTimer = 10.0f;
-                ChangeSeasonTiles();
+            } else if (cutsceneTimer >= 0 && !isDoneWithCutscene) {
+                cutsceneTimer -= Time.unscaledDeltaTime;
+                if (cutsceneTimer < 0) {
+                    if (currentSeasonIndex == 3) {
+                        currentSeasonIndex = 0;
+                    } else {
+                        currentSeasonIndex = currentSeasonIndex + 1;
+                    }
+                    ChangeSeasonTiles();
+
+                    seasonChangeCount += 1;
+                    if (seasonChangeCount >= 3) {
+                        cutsceneTimer = -1.0f;
+                        isDoneWithCutscene = true;
+                    } else {
+                        cutsceneTimer = 1.0f;
+                    }
+                }
             }
         }
     }
@@ -108,5 +133,10 @@ public class SeasonManager : MonoBehaviour
                 grassTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
             }
         }
+    }
+
+    public void SeasonsForOpeningCutscene() {
+        isDoneWithCutscene = false;
+        cutsceneTimer = 1.0f;
     }
 }

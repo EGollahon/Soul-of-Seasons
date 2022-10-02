@@ -8,28 +8,32 @@ public class SylvieController : MonoBehaviour
     BoxCollider2D boxCollider;
     Animator ivyAnimator;
 
-    public float walkSpeed = 5.0f;
-    public float calculatedJumpSpeed = 0.0f;
-    public float calculatedGravity = 0.0f;
+    float walkSpeed = 5.0f;
+    float calculatedJumpSpeed = 0.0f;
+    float calculatedGravity = -14.9999f;
 
     Vector2 movement = new Vector2(0, 0);
 
-    public bool isJumping = false;
-    public bool isFalling = false;
-    public float jumpTimer = -1.0f;
-    public float fallTimer = -1.0f;
-
+    bool isJumping = false;
+    bool isFalling = false;
+    float jumpTimer = -1.0f;
+    float fallTimer = -1.0f;
     string seasonOnLastUpdate;
 
     public GameObject UIWinterShard;
     public GameObject UISpringShard;
     public GameObject UISummerShard;
     public GameObject UIAutumnShard;
+    public GameObject narrativeReference;
+    NarrativeManager narrative;
+
+    public bool isDoneWithCutscene = true;
 
     void Start() {
         ivyRigidbody = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         ivyAnimator = GetComponent<Animator>();
+        narrative = narrativeReference.GetComponent<NarrativeManager>();
 
         seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
         int seasonLayer = LayerMask.NameToLayer(SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]);
@@ -78,7 +82,6 @@ public class SylvieController : MonoBehaviour
                 isJumping = true;
                 jumpTimer = 0.5f;
                 ivyAnimator.SetTrigger("Jump");
-                Debug.Log("jump");
                 ivyAnimator.SetBool("IsJumping", true);
             }
         }
@@ -112,8 +115,17 @@ public class SylvieController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        int contactCount = collision.contactCount;
+        ContactPoint2D[] contacts = new ContactPoint2D[10];
+        if (contactCount > contacts.Length)
+        {
+            contacts = new ContactPoint2D[contactCount];
+        }
+        collision.GetContacts(contacts);
+        float hitY = contacts[0].point.y;
+
         if (
-            collision.gameObject.tag == "Tile"
+            (collision.gameObject.tag == "Tile" && hitY <= gameObject.transform.position.y)
             || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
             || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
             || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
@@ -121,13 +133,11 @@ public class SylvieController : MonoBehaviour
         {
             isFalling = false;
             ivyAnimator.SetTrigger("Land");
-            Debug.Log("land1");
             ivyAnimator.SetBool("IsFalling", false);
         } else if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
             ivyRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
             ivyAnimator.SetTrigger("Land");
-            Debug.Log("land2");
             ivyAnimator.SetBool("IsFalling", false);
         }
     }
@@ -138,7 +148,6 @@ public class SylvieController : MonoBehaviour
             ivyRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
             ivyAnimator.SetTrigger("Land");
-            Debug.Log("land3");
             ivyAnimator.SetBool("IsFalling", false);
         }
     }
@@ -158,19 +167,32 @@ public class SylvieController : MonoBehaviour
             || collider.gameObject.tag == "SummerShard" || collider.gameObject.tag == "AutumnShard"
         ) {
             collider.gameObject.SetActive(false);
+            SeasonManager.piecesLeft -= 1;
             if (collider.gameObject.tag == "WinterShard") {
                 SeasonManager.winterShardObtained = true;
                 UIWinterShard.SetActive(true);
+                narrative.FragmentDialog("Winter");
             } else if (collider.gameObject.tag == "SpringShard") {
                 SeasonManager.springShardObtained = true;
                 UISpringShard.SetActive(true);
+                narrative.FragmentDialog("Spring");
             } else if (collider.gameObject.tag == "SummerShard") {
                 SeasonManager.summerShardObtained = true;
                 UISummerShard.SetActive(true);
+                narrative.FragmentDialog("Summer");
             } else if (collider.gameObject.tag == "AutumnShard") {
                 SeasonManager.autumnShardObtained = true;
                 UIAutumnShard.SetActive(true);
+                narrative.FragmentDialog("Autumn");
             }
         }
+    }
+
+    public void ClosingCutsceneMovement() {
+        ivyAnimator.SetFloat("LookDirection", -1.0f);
+        ivyAnimator.SetBool("IsMoving", false);
+        ivyAnimator.SetBool("IsJumping", false);
+        ivyAnimator.SetBool("IsFalling", false);
+        ivyRigidbody.position = new Vector2(1.0f, -0.5f);
     }
 }
