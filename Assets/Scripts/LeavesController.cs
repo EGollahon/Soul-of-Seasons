@@ -15,9 +15,9 @@ public class LeavesController : MonoBehaviour
         seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
 
         if (leavesSeason == "Spring") {
-            leavesSprite = Resources.Load<Sprite>("spring-leaf");
+            leavesSprite = Resources.Load<Sprite>("spring-flower");
         } else {
-            leavesSprite = Resources.Load<Sprite>("autumn-leaf");
+            leavesSprite = Resources.Load<Sprite>("leaf-pile");
         }
 
        ChangeSeasonSprite();

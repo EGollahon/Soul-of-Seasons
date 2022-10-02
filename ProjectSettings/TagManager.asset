@@ -49,3 +49,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BackgroundTilemap
+    uniqueID: 3089327111
+    locked: 0
+  - name: ColliderTilemap
+    uniqueID: 3859607041
+    locked: 0
+  - name: ObstaclesAndShards
+    uniqueID: 881114025
+    locked: 0
+  - name: Ivy
+    uniqueID: 3025581851
+    locked: 0
+  - name: GrassTilemap
+    uniqueID: 380434403
+    locked: 0

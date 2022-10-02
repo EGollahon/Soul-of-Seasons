@@ -8,8 +8,12 @@ public class SeasonManager : MonoBehaviour
     public static int currentSeasonIndex = 0;
     public static string[] seasonArray = {"Winter", "Spring", "Summer", "Autumn"};
     float seasonTimer = 10.0f;
-    public GameObject tilemapObject;
-    Tilemap tilemap;
+    public GameObject colliderTilemapReference;
+    public GameObject backgroundTilemapReference;
+    public GameObject grassTilemapReference;
+    Tilemap colliderTilemap;
+    Tilemap backgroundTilemap;
+    Tilemap grassTilemap;
 
     Object[] winterTileArray;
     Object[] springTileArray;
@@ -23,7 +27,9 @@ public class SeasonManager : MonoBehaviour
 
     void Start()
     {
-        tilemap = tilemapObject.GetComponent<Tilemap>();
+        colliderTilemap = colliderTilemapReference.GetComponent<Tilemap>();
+        backgroundTilemap = backgroundTilemapReference.GetComponent<Tilemap>();
+        grassTilemap = grassTilemapReference.GetComponent<Tilemap>();
         winterTileArray = Resources.LoadAll("Winter Tiles", typeof(TileBase));
         springTileArray = Resources.LoadAll("Spring Tiles", typeof(TileBase));
         summerTileArray = Resources.LoadAll("Summer Tiles", typeof(TileBase));
@@ -52,30 +58,54 @@ public class SeasonManager : MonoBehaviour
         if (seasonArray[currentSeasonIndex] == "Winter") {
             foreach (TileBase tile in winterTileArray)
             {
-                tilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
-                tilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
-                tilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
             }
         } else if (seasonArray[currentSeasonIndex] == "Spring") {
             foreach (TileBase tile in springTileArray)
             {
-                tilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
-                tilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
-                tilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
             }
         } else if (seasonArray[currentSeasonIndex] == "Summer") {
             foreach (TileBase tile in summerTileArray)
             {
-                tilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
-                tilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
-                tilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(autumnTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
             }
         } else if (seasonArray[currentSeasonIndex] == "Autumn") {
             foreach (TileBase tile in autumnTileArray)
             {
-                tilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
-                tilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
-                tilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                colliderTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                backgroundTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(winterTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(springTileArray, t => t.name == tile.name) as TileBase, tile);
+                grassTilemap.SwapTile(System.Array.Find(summerTileArray, t => t.name == tile.name) as TileBase, tile);
             }
         }
     }

@@ -15,8 +15,8 @@ public class WaterController : MonoBehaviour
         waterRenderer = gameObject.GetComponent<SpriteRenderer>();
         seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
 
-        waterSprite = Resources.Load<Sprite>("unfrozen-water");
-        iceSprite = Resources.Load<Sprite>("frozen-water");
+        waterSprite = Resources.Load<Sprite>("water");
+        iceSprite = Resources.Load<Sprite>("ice");
 
         ChangeSeasonSprite();
     }
