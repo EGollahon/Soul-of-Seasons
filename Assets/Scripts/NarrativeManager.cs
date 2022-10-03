@@ -60,13 +60,12 @@ public class NarrativeManager : MonoBehaviour
                     continueCutsceneSeasons = false;
                     cutSceneStage = cutSceneStage + 1;
                 } else if (cutSceneStage == 3 || cutSceneStage == 4 || cutSceneStage == 5 || cutSceneStage == 6) {
-                    cutSceneStage += 1;
                     Play();
-                } else if (cutSceneStage == 8) {
+                } else if (cutSceneStage == 7) {
                     ivy.ClosingCutsceneMovement();
                     miniSoul.SetActive(true);
                     PlayDialog("The forest is at peace once more.");
-                } else if (cutSceneStage == 9) {
+                } else if (cutSceneStage == 8) {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
             }
@@ -101,9 +100,5 @@ public class NarrativeManager : MonoBehaviour
         } else {
             PlayDialog("Here's the " + fragmentSeason + " piece, the last one! Time to put the Soul of Seasons back where it belongs.");
         }
-    }
-
-    void ClosingCutscene() {
-
     }
 }
