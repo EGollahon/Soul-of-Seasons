@@ -44,11 +44,7 @@ public class SylvieController : MonoBehaviour
         movement = Vector2.zero;
         movement.x = Input.GetAxis("Horizontal");
 
-        if (isJumping) {
-
-        } else if (isFalling) {
-
-        } else if (movement.x > 0) {
+        if (movement.x > 0) {
             ivyAnimator.SetFloat("LookDirection", 1.0f);
             ivyAnimator.SetBool("IsMoving", true);
         } else if (movement.x < 0) {
@@ -83,6 +79,7 @@ public class SylvieController : MonoBehaviour
                 jumpTimer = 0.5f;
                 ivyAnimator.SetTrigger("Jump");
                 ivyAnimator.SetBool("IsJumping", true);
+                ivyAnimator.SetBool("IsFalling", false);
             }
         }
 
@@ -115,20 +112,12 @@ public class SylvieController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        int contactCount = collision.contactCount;
-        ContactPoint2D[] contacts = new ContactPoint2D[10];
-        if (contactCount > contacts.Length)
-        {
-            contacts = new ContactPoint2D[contactCount];
-        }
-        collision.GetContacts(contacts);
-        float hitY = contacts[0].point.y;
-
+        bool isOnGround = HitIsGround(collision);
         if (
-            (collision.gameObject.tag == "Tile" && hitY <= gameObject.transform.position.y - 0.5f)
+            isOnGround && (collision.gameObject.tag == "Tile"
             || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
             || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
-            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
+            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn"))
         )
         {
             isFalling = false;
@@ -144,29 +133,22 @@ public class SylvieController : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        int contactCount = collision.contactCount;
-        ContactPoint2D[] contacts = new ContactPoint2D[10];
-        if (contactCount > contacts.Length)
-        {
-            contacts = new ContactPoint2D[contactCount];
-        }
-        collision.GetContacts(contacts);
-        float hitY = contacts[0].point.y;
-
+        bool isOnGround = HitIsGround(collision);
         if (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] != "Winter") {
             ivyRigidbody.position = collision.gameObject.GetComponent<WaterController>().respawnPoint;
             isFalling = false;
             ivyAnimator.SetTrigger("Land");
             ivyAnimator.SetBool("IsFalling", false);
         } else if (
-            (collision.gameObject.tag == "Tile" && hitY <= gameObject.transform.position.y - 0.5f)
+            isOnGround && (collision.gameObject.tag == "Tile"
             || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
             || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
-            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
+            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn"))
         )
         {
             isFalling = false;
             ivyAnimator.SetBool("IsFalling", false);
+            ivyAnimator.SetTrigger("Land");
         }
     }
 
@@ -212,5 +194,27 @@ public class SylvieController : MonoBehaviour
         ivyAnimator.SetBool("IsJumping", false);
         ivyAnimator.SetBool("IsFalling", false);
         ivyRigidbody.position = new Vector2(1.0f, -0.5f);
+    }
+
+    bool HitIsGround(Collision2D collision) {
+        int contactCount = collision.contactCount;
+        ContactPoint2D[] contacts = new ContactPoint2D[10];
+        if (contactCount > contacts.Length)
+        {
+            contacts = new ContactPoint2D[contactCount];
+        }
+        collision.GetContacts(contacts);
+        
+        bool isOnGround = false;
+        foreach (ContactPoint2D contact in contacts) {
+            if (
+                contact.point.y <= gameObject.transform.position.y - 0.5f
+                && Mathf.Abs(gameObject.transform.position.x - contact.point.x) <= 0.25f
+            ) {
+                isOnGround = true;
+            }
+        }
+
+        return isOnGround;
     }
 }
