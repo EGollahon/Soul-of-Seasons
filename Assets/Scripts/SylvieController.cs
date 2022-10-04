@@ -114,10 +114,10 @@ public class SylvieController : MonoBehaviour
     {
         bool isOnGround = HitIsGround(collision);
         if (
-            isOnGround && (collision.gameObject.tag == "Tile"
+            (collision.gameObject.tag == "Tile" && isOnGround)
             || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
             || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
-            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn"))
+            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
         )
         {
             isFalling = false;
@@ -140,10 +140,10 @@ public class SylvieController : MonoBehaviour
             ivyAnimator.SetTrigger("Land");
             ivyAnimator.SetBool("IsFalling", false);
         } else if (
-            isOnGround && (collision.gameObject.tag == "Tile"
+            (collision.gameObject.tag == "Tile" && isOnGround)
             || (collision.gameObject.tag == "Pond" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Winter")
             || (collision.gameObject.tag == "SpringLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Spring")
-            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn"))
+            || (collision.gameObject.tag == "AutumnLeaves" && SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == "Autumn")
         )
         {
             isFalling = false;
