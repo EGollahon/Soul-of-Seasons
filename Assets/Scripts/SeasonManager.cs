@@ -139,4 +139,14 @@ public class SeasonManager : MonoBehaviour
         isDoneWithCutscene = false;
         cutsceneTimer = 1.0f;
     }
+
+    public void SkipToNextSeason() {
+        if (currentSeasonIndex == 3) {
+            currentSeasonIndex = 0;
+        } else {
+            currentSeasonIndex = currentSeasonIndex + 1;
+        }
+        seasonTimer = 10.0f;
+        ChangeSeasonTiles();
+    }
 }

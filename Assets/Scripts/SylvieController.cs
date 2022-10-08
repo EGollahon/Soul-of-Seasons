@@ -26,6 +26,8 @@ public class SylvieController : MonoBehaviour
     public GameObject UIAutumnShard;
     public GameObject narrativeReference;
     NarrativeManager narrative;
+    public GameObject seasonReference;
+    SeasonManager season;
 
     public bool isDoneWithCutscene = true;
 
@@ -34,6 +36,7 @@ public class SylvieController : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         ivyAnimator = GetComponent<Animator>();
         narrative = narrativeReference.GetComponent<NarrativeManager>();
+        season = seasonReference.GetComponent<SeasonManager>();
 
         seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
         int seasonLayer = LayerMask.NameToLayer(SeasonManager.seasonArray[SeasonManager.currentSeasonIndex]);
@@ -94,6 +97,17 @@ public class SylvieController : MonoBehaviour
             gameObject.layer = seasonLayer;
         }
         seasonOnLastUpdate = SeasonManager.seasonArray[SeasonManager.currentSeasonIndex];
+
+        if (Input.GetKeyDown(KeyCode.Z)) {
+            if (
+                (SeasonManager.winterShardObtained && SeasonManager.currentSeasonIndex == 0)
+                || (SeasonManager.springShardObtained && SeasonManager.currentSeasonIndex == 1)
+                || (SeasonManager.summerShardObtained && SeasonManager.currentSeasonIndex == 2)
+                || (SeasonManager.autumnShardObtained && SeasonManager.currentSeasonIndex == 3)
+            ) {
+                season.SkipToNextSeason();
+            }
+        }
     }
 
     void FixedUpdate() {

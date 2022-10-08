@@ -7,6 +7,7 @@ public class LeavesController : MonoBehaviour
     SpriteRenderer leavesRenderer;
     public string leavesSeason;
     Sprite leavesSprite;
+    Sprite hintSprite;
     string seasonOnLastUpdate;
 
     void Start()
@@ -16,8 +17,10 @@ public class LeavesController : MonoBehaviour
 
         if (leavesSeason == "Spring") {
             leavesSprite = Resources.Load<Sprite>("spring-flower");
+            hintSprite = Resources.Load<Sprite>("spring-flower-hint");
         } else {
             leavesSprite = Resources.Load<Sprite>("leaf-pile");
+            hintSprite = Resources.Load<Sprite>("leaf-pile-hint");
         }
 
        ChangeSeasonSprite();
@@ -37,7 +40,7 @@ public class LeavesController : MonoBehaviour
         if (SeasonManager.seasonArray[SeasonManager.currentSeasonIndex] == leavesSeason) {
             leavesRenderer.sprite = leavesSprite;
         } else {
-            leavesRenderer.sprite = null;
+            leavesRenderer.sprite = hintSprite;
         }
     }
 }

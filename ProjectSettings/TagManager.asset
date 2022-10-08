@@ -12,6 +12,7 @@ TagManager:
   - AutumnShard
   - SpringLeaves
   - AutumnLeaves
+  - Ivy
   layers:
   - Default
   - TransparentFX
